@@ -1,10 +1,11 @@
 from pymongo import MongoClient
-client = MongoClient("mongodb+srv://dentlore:Lv8uNUt5u08nZLUI@cluster0.3h53laa.mongodb.net/")
+client = MongoClient("mongodb+srv://dentlore:Lv8uNUt5u08nZLUI@cluster0.zq9fxeg.mongodb.net/")
 db = client["dental_disease"]
 collection = db["caries"]
 node = []
 relation = []
 frequency = []
+# passmongo QKUbcy3AH2ZL3P2
 
 
 def queryData():
@@ -70,5 +71,3 @@ data_clean = cleanData(queryData())
 countFrequency(data_clean)
 result_node = formatForNodeToJson()
 result_edge = formatForRelationToJson(data_clean)
-
-    

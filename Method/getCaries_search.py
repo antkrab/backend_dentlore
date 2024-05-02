@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-client = MongoClient("mongodb+srv://dentlore:Lv8uNUt5u08nZLUI@cluster0.3h53laa.mongodb.net/")
+client = MongoClient("mongodb+srv://dentlore:Lv8uNUt5u08nZLUI@cluster0.zq9fxeg.mongodb.net/")
 db = client["dental_disease"]
 collection = db["caries"]
 node = []
@@ -54,8 +54,11 @@ def formatForNodeToJson_HT(highlight_node):
     result =[]
     highlight_node = highlight_node.split(",")
     highlight_node = [word.lower() for word in highlight_node]
-    for i in highlight_node:
-        print(i)
+
+    #for debuging
+    # for i in highlight_node:
+    #     print(i) 
+    
     for i in range(len(node)):
         if node[i] in highlight_node:
             data = {"id":node[i],"value": frequency[i],"label": node[i],"color":"red"}
@@ -75,6 +78,6 @@ data_clean = cleanData(queryData())
 countFrequency(data_clean)
 HTresult = formatForNodeToJson_HT("EnameL,operative treatment")
 result_edge = formatForRelationToJson(data_clean)
-print(HTresult)
+# print(HTresult)
 
     

@@ -8,8 +8,9 @@ from Method.getCaries import result_node,result_edge
 import json
 from fastapi.responses import JSONResponse
 from Method.getCaries_search import formatForNodeToJson_HT
+from Method.creatRdf import rdf_disease
 
-client = MongoClient("mongodb+srv://dentlore:Lv8uNUt5u08nZLUI@cluster0.3h53laa.mongodb.net/")
+client = MongoClient("mongodb+srv://dentlore:Lv8uNUt5u08nZLUI@cluster0.zq9fxeg.mongodb.net/")
 db = client["dental_disease"]
 app = FastAPI()
 
@@ -28,3 +29,7 @@ async def getedge():
 @app.get("/getnode_search/{q}")
 async def getnode_search(q:str):
     return JSONResponse(formatForNodeToJson_HT(q))
+
+@app.get("/getrdf")
+async def getrdf():
+    return rdf_disease

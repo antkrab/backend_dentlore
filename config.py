@@ -1,1 +1,1 @@
-DB_URL = "mongodb+srv://dentlore:Lv8uNUt5u08nZLUI@cluster0.3h53laa.mongodb.net/"
+DB_URL = "mongodb+srv://dentlore:Lv8uNUt5u08nZLUI@cluster0.zq9fxeg.mongodb.net/"
