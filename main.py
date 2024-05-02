@@ -9,10 +9,20 @@ import json
 from fastapi.responses import JSONResponse
 from Method.getCaries_search import formatForNodeToJson_HT
 from Method.creatRdf import rdf_disease
+from fastapi.middleware.cors import CORSMiddleware
+
 
 client = MongoClient("mongodb+srv://dentlore:Lv8uNUt5u08nZLUI@cluster0.zq9fxeg.mongodb.net/")
 db = client["dental_disease"]
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],  
+    allow_headers=["*"],  
+)
 
 @app.get("/")
 async def root():
