@@ -29,7 +29,7 @@ def rdf_disease():
     data = cleanData(queryData())
     g = create_rdf(data)
     print(g.serialize(format='pretty-xml'))
-    return g.serialize(destination='example.rdf', format='pretty-xml')
+    return g.serialize(format='pretty-xml')
 
 # def write_rdf(graph, file_path):
 #     with open(file_path, 'wb') as f:

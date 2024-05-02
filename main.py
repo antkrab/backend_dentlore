@@ -1,5 +1,5 @@
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from pymongo import MongoClient
 from config import DB_URL
 from pydantic import BaseModel
@@ -32,4 +32,10 @@ async def getnode_search(q:str):
 
 @app.get("/getrdf")
 async def getrdf():
-    return rdf_disease
+    return rdf_disease()
+
+@app.get("/downloadrdf_caries")
+async def downloadrdf_caries():
+    response = Response(content=rdf_disease(), media_type="application/rdf+xml")
+    response.headers["Content-Disposition"] = "attachment; filename=dental_caries.rdf"
+    return response
