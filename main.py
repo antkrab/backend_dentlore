@@ -4,7 +4,6 @@ from pymongo import MongoClient
 from config import DB_URL
 from pydantic import BaseModel
 from bson.objectid import ObjectId
-import json
 from fastapi.responses import JSONResponse
 from Method.creatRdf import rdf_disease
 from fastapi.middleware.cors import CORSMiddleware
