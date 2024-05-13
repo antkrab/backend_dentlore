@@ -4,7 +4,6 @@ from pymongo import MongoClient
 from config import DB_URL
 from pydantic import BaseModel
 from bson.objectid import ObjectId
-from Method.getCaries import result_node,result_edge
 import json
 from fastapi.responses import JSONResponse
 from Method.creatRdf import rdf_disease
@@ -14,9 +13,10 @@ from io import StringIO
 from Method.getSearch import formatForNodeToJson_HT, formatForRelationToJson, search_collection
 from Method.getNodeFromButton import getEdgeFromDb
 from bson.objectid import ObjectId
+from Method.getDataForUpdate import getDocId,formatDataToUpdate
 
 
-client = MongoClient("mongodb+srv://dentlore:Lv8uNUt5u08nZLUI@cluster0.zq9fxeg.mongodb.net/")
+client = MongoClient(DB_URL)
 db = client["dental_disease"]
 app = FastAPI()
 
@@ -96,11 +96,11 @@ async def get_collections():
 async def getedgeSearch(node:str):
     return JSONResponse(getEdgeFromDb(node))
 
-@app.put("/update/{document_id}")
-async def update_document(document_id: str):
-    new_data = {"head":"x","relation":"y","tail":"z"}
-    # อัปเดตเอกสารใน MongoDB
-    collection = db['caries']
+@app.put("/update_data")
+async def update_document(old_h: str, old_r: str, old_t: str, new_h: str, new_r: str, new_t: str):
+    collection = db[search_collection(old_h)]
+    document_id = getDocId(old_h,old_r,old_t)
+    new_data = formatDataToUpdate(new_h,new_r,new_t)
     result = collection.update_one({"_id": ObjectId(document_id)}, {"$set": new_data})
     if result.modified_count == 1:
         return {"message": "success"}
