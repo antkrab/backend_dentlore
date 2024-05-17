@@ -15,8 +15,9 @@ from bson.objectid import ObjectId
 from Method.getDataForUpdate import getDocId,formatDataToUpdate
 
 
-client = MongoClient(DB_URL)
+client = MongoClient("mongodb+srv://dentlore:Lv8uNUt5u08nZLUI@cluster0.zq9fxeg.mongodb.net/")
 db = client["dental_disease"]
+password_admin = "ajarnart"
 app = FastAPI()
 
 app.add_middleware(
@@ -59,8 +60,9 @@ async def downloadrdf_caries():
 
 
 @app.post("/add_data_from_csv")
-async def add_data_from_csv(collection_name: str, file: UploadFile = File(...)):
-
+async def add_data_from_csv(collection_name: str, password:str, file: UploadFile = File(...)):
+    if password != password_admin:
+        return {"message": "admin only"}
     if collection_name in db.list_collection_names():
         return {"message": "Collection already exists"}
     db.create_collection(collection_name)
@@ -96,7 +98,9 @@ async def getedgeSearch(node:str):
     return JSONResponse(getEdgeFromDb(node))
 
 @app.put("/update_data")
-async def update_document(old_h: str, old_r: str, old_t: str, new_h: str, new_r: str, new_t: str):
+async def update_document(old_h: str, old_r: str, old_t: str, new_h: str, new_r: str, new_t: str, password:str):
+    if password != password_admin:
+        return {"message": "admin only"}
     collection = db[search_collection(old_h)]
     document_id = getDocId(old_h,old_r,old_t)
     new_data = formatDataToUpdate(new_h,new_r,new_t)
@@ -105,3 +109,57 @@ async def update_document(old_h: str, old_r: str, old_t: str, new_h: str, new_r:
         return {"message": "success"}
     else:
         return {"message": "not found"}
+
+
+@app.post("/add_data")
+async def addData(topic: str,head: str, relation: str, tail: str, password:str):
+    if password != password_admin:
+        return {"message": "admin only"}
+    if topic in db.list_collection_names():
+        colletion = db[db.list_collection_names()[db.list_collection_names().index(topic)]]
+        result = colletion.insert_one({"head":head, "relation": " " + relation, "tail": " " + tail})
+    else:
+        return {"message": "not found"}
+    if result.inserted_id:
+        return {"message": "success"}
+    else:
+        raise HTTPException(status_code=400, detail="Item could not be added")
+    
+@app.delete("/delete_data")
+async def deleteData(head: str, relation: str, tail: str, password:str):
+    if password != password_admin:
+        return {"message": "admin only"}
+    
+    try:
+        collection = db[search_collection(head)]
+    except :
+        return {"message": "not found"}
+    document_id = getDocId(head,relation,tail)
+    print(document_id)
+    result = collection.delete_one({"_id": ObjectId(document_id)})
+    if result.deleted_count == 1:
+        return {"message": "Item deleted successfully"}
+    else:
+        raise HTTPException(status_code=404, detail="Item not found")
+
+@app.delete("/delete_topic")
+async def dropcollection(collection_name:str, password:str):
+    if password != password_admin:
+        return {"message": "admin only"}
+    
+    if collection_name in db.list_collection_names():
+        collection = db[db.list_collection_names()[db.list_collection_names().index(collection_name)]]
+    else:
+        return {"message": "not found"}
+    try:
+        collection.drop()
+        return {"message": "Collection dropped successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/isAdmin")
+async def isAdmin(password: str):
+    if password == password_admin:
+        return JSONResponse(True)
+    else:
+        return JSONResponse(False)
