@@ -78,10 +78,12 @@ def formatForNodeToJson_HT(highlight_node):
     
     for i in range(len(node)):
         if node[i] in highlight_node:
-            data = {"id":node[i],"value": frequency[i],"label": node[i],"color":"red"}
+            word = node[i][0].upper() + node[i][1:]
+            data = {"id":word,"value": frequency[i],"label": word,"color":"red"}
             result.append(data)
         else:
-            data = {"id":node[i],"value": frequency[i],"label": node[i]}
+            word = node[i][0].upper() + node[i][1:]
+            data = {"id":word,"value": frequency[i],"label": word}
             result.append(data)
     return result
 
@@ -94,7 +96,9 @@ def formatForRelationToJson(highlight_node):
     lst = cleanData(queryData(db[collection]))
     result = []
     for row in lst:
-        data = {"from":row[0],"to":row[2],"label":row[1]}
+        head_node = row[0][0].upper() + row[0][1:]
+        tail_node = row[2][0].upper() + row[2][1:]
+        data = {"from":head_node,"to":tail_node,"label":row[1]}
         result.append(data)
     return result
  

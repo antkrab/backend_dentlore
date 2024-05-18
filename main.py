@@ -14,7 +14,6 @@ from Method.getNodeFromButton import getEdgeFromDb
 from bson.objectid import ObjectId
 from Method.getDataForUpdate import getDocId,formatDataToUpdate
 
-
 client = MongoClient("mongodb+srv://dentlore:Lv8uNUt5u08nZLUI@cluster0.zq9fxeg.mongodb.net/")
 db = client["dental_disease"]
 password_admin = "ajarnart"
