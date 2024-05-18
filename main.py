@@ -162,3 +162,7 @@ async def isAdmin(password: str):
         return JSONResponse(True)
     else:
         return JSONResponse(False)
+
+@app.get("/test")
+async def test(h:str,r:str,t:str):
+    return getDocId(h,r,t)
