@@ -4,7 +4,7 @@ from pymongo import MongoClient
 from config import DB_URL
 from pydantic import BaseModel
 from bson.objectid import ObjectId
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from Method.creatRdf import rdf_disease
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
@@ -13,6 +13,7 @@ from Method.getSearch import formatForNodeToJson_HT, formatForRelationToJson, se
 from Method.getNodeFromButton import getEdgeFromDb
 from bson.objectid import ObjectId
 from Method.getDataForUpdate import getDocId,formatDataToUpdate
+from Method.downloadcsv import generate_csv, createDataForCsv
 
 client = MongoClient("mongodb+srv://dentlore:Lv8uNUt5u08nZLUI@cluster0.zq9fxeg.mongodb.net/")
 db = client["dental_disease"]
@@ -30,14 +31,6 @@ app.add_middleware(
 @app.get("/")
 async def root():
     return {"root api"}
-
-# @app.get("/getnode")
-# async def getnode():
-#     return JSONResponse(result_node)
-
-# @app.get("/getedge")
-# async def getedge():
-#     return JSONResponse(result_edge)
 
 @app.get("/getnode_search")
 async def getnode_search(q:str):
@@ -163,6 +156,12 @@ async def isAdmin(password: str):
     else:
         return JSONResponse(False)
 
-@app.get("/test")
-async def test(h:str,r:str,t:str):
-    return getDocId(h,r,t)
+@app.get("/downloadCsv")
+async def downloadCSV(topic: str):
+    csv_data = generate_csv(createDataForCsv(topic))
+    response = StreamingResponse(
+        csv_data,
+        media_type="text/csv"
+    )
+    response.headers["Content-Disposition"] = f"attachment; filename={topic}.csv"
+    return response

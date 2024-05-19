@@ -61,7 +61,9 @@ def formatForNodeToJson():
 def formatForRelationToJson(lst):
     result = []
     for row in lst:
-        data = {"from":row[0],"to":row[2],"label":row[1]}
+        head = row[0][0].upper() + row[0][1:]
+        tail = row[2][0].upper() + row[2][1:]
+        data = {"from":head,"to":tail,"label":row[1]}
         result.append(data)
     return result
 
