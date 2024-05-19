@@ -87,7 +87,10 @@ async def get_collections():
 
 @app.get("/getedgeSearch")
 async def getedgeSearch(node:str):
-    return JSONResponse(getEdgeFromDb(node))
+    try:
+        return JSONResponse(getEdgeFromDb(node))
+    except:
+        return {"message": "not found"}
 
 @app.put("/update_data")
 async def update_document(old_h: str, old_r: str, old_t: str, new_h: str, new_r: str, new_t: str, password:str):

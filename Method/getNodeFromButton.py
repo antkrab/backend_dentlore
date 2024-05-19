@@ -6,6 +6,7 @@ from Method.getCaries import formatForRelationToJson
 
 def getEdgeFromDb(node):
     lst = []
+    node = node.lower()
     collection = db[search_collection(node)]
     result = collection.find({"$or": [{"head": node}, {"tail": " " + node}]})
     for i in result:
