@@ -3,5 +3,3 @@ pymongo
 pandas
 rdflib
 pydantic
-csv
-io
