@@ -2,7 +2,7 @@ import csv
 from rdflib import Graph, Literal, URIRef, Namespace, RDF
 from rdflib.namespace import RDF, RDFS, Namespace
 from pymongo import MongoClient
-from Method.getCaries_search import queryData,cleanData
+from Method.getSearch import cleanData, queryData
 client = MongoClient("mongodb+srv://dentlore:Lv8uNUt5u08nZLUI@cluster0.zq9fxeg.mongodb.net/")
 
 db = client["dental_disease"]
@@ -10,14 +10,11 @@ collection = db["caries"]
 node = []
 relation = []
 frequency = []
-
-
 result = []
 
-
-def create_rdf(data):
+def create_rdf(data,topic):
     g = Graph()
-    ns = Namespace("http://dentlore.online/dental_caries/")
+    ns = Namespace(f"http://dentlore.online/{topic}/")
     for row in data:
         subject = URIRef(ns[row[0].replace(" ","_")])
         predicate = URIRef(ns[row[1].replace(" ","_")])
@@ -25,9 +22,9 @@ def create_rdf(data):
         g.add((subject, predicate, obj))
     return g
 
-def rdf_disease():
-    data = cleanData(queryData())
-    g = create_rdf(data)
+def rdf_disease(topic):
+    data = cleanData(queryData(db[topic]))
+    g = create_rdf(data,topic)
     print(g.serialize(format='pretty-xml'))
     return g.serialize(format='pretty-xml')
 
@@ -45,3 +42,4 @@ def rdf_disease():
 # write_rdf(g, "firstrdf.rdf")
 
 
+# rdf_disease("caries")

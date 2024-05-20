@@ -5,7 +5,6 @@ import io
 client = MongoClient("mongodb+srv://dentlore:Lv8uNUt5u08nZLUI@cluster0.zq9fxeg.mongodb.net/")
 db = client["dental_disease"]
 
-
 def createDataForCsv(collection_input: str):
     collection = db[collection_input]
     data = cleanData(queryData(collection))

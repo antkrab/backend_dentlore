@@ -41,15 +41,20 @@ async def getedge_search(q:str):
     return JSONResponse(formatForRelationToJson(q))
 
 @app.get("/getrdf")
-async def getrdf():
-    return rdf_disease()
+async def getrdf(topic: str):
+    try:
+        return rdf_disease(topic)
+    except Exception as e:
+        return HTTPException(status_code=500, detail=f"Error: {str(e)}")
 
-@app.get("/downloadrdf_caries")
-async def downloadrdf_caries():
-    response = Response(content=rdf_disease(), media_type="application/rdf+xml")
-    response.headers["Content-Disposition"] = "attachment; filename=dental_caries.rdf"
-    return response
-
+@app.get("/downloadrdf")
+async def downloadrdf_caries(topic: str):
+    try:
+        response = Response(content=rdf_disease(topic), media_type="application/rdf+xml")
+        response.headers["Content-Disposition"] = "attachment; filename=dental_caries.rdf"
+        return response
+    except Exception as e:
+        return HTTPException(status_code=500, detail=f"Error: {str(e)}")
 
 @app.post("/add_data_from_csv")
 async def add_data_from_csv(collection_name: str, password:str, file: UploadFile = File(...)):
