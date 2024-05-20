@@ -104,6 +104,12 @@ async def getedgeSearch(node:str):
 async def update_document(old_h: str, old_r: str, old_t: str, new_h: str, new_r: str, new_t: str, password:str):
     if password != password_admin:
         return {"message": "admin only"}
+    old_h = old_h.lower()
+    old_r = old_r.lower()
+    old_t = old_t.lower()
+    new_h = new_h.lower()
+    new_r = new_r.lower()
+    new_t = new_t.lower()
     collection = db[search_collection(old_h)]
     document_id = getDocId(old_h,old_r,old_t)
     new_data = formatDataToUpdate(new_h,new_r,new_t)
