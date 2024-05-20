@@ -50,11 +50,11 @@ async def getrdf(topic: str):
 @app.get("/downloadrdf")
 async def downloadrdf_caries(topic: str):
     try:
-        if topic not in db.list_collection_names:
+        if topic not in db.list_collection_names():
             return {"message":"not found"}
         else:
             response = Response(content=rdf_disease(topic), media_type="application/rdf+xml")
-            response.headers["Content-Disposition"] = "attachment; filename=dental_caries.rdf"
+            response.headers["Content-Disposition"] = f"attachment; filename={topic}.rdf"
             return response
     except Exception as e:
         return HTTPException(status_code=500, detail=f"Error: {str(e)}")
