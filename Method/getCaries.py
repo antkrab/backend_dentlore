@@ -59,7 +59,7 @@ def formatForNodeToJson():
         data = {"id":node[i],"value": frequency[i],"label": node[i]}
         result.append(data)
     return result
-def formatForRelationToJson(lst):
+def formatForRelationToJson_normal(lst):
     result = []
     for row in lst:
         head = row[0][0].upper() + row[0][1:]
@@ -73,4 +73,4 @@ def formatForRelationToJson(lst):
 data_clean = cleanData(queryData())
 countFrequency(data_clean)
 result_node = formatForNodeToJson()
-result_edge = formatForRelationToJson(data_clean)
+result_edge = formatForRelationToJson_normal(data_clean)

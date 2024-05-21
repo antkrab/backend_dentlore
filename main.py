@@ -9,11 +9,12 @@ from Method.creatRdf import rdf_disease
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
 from io import StringIO
-from Method.getSearch import formatForNodeToJson_HT, formatForRelationToJson, search_collection
+from Method.getSearch import formatForNodeToJson_HT, formatForRelationToJson, search_collection, cleanData, queryData
 from Method.getNodeFromButton import getEdgeFromDb
 from bson.objectid import ObjectId
 from Method.getDataForUpdate import getDocId,formatDataToUpdate
 from Method.downloadcsv import generate_csv, createDataForCsv
+from Method.getCaries import formatForRelationToJson_normal
 
 client = MongoClient("mongodb+srv://dentlore:Lv8uNUt5u08nZLUI@cluster0.zq9fxeg.mongodb.net/")
 db = client["dental_disease"]
@@ -185,3 +186,16 @@ async def downloadCSV(topic: str):
     )
     response.headers["Content-Disposition"] = f"attachment; filename={topic}.csv"
     return response
+
+@app.get("/getEdit")
+async def getEdit(topic: str):
+    try:
+        if topic in db.list_collection_names():
+            data = cleanData(queryData(db[topic]))
+            return JSONResponse(formatForRelationToJson_normal(data))
+        else:
+            {"message": "not found"}
+
+
+    except Exception as e:
+        return {"message": str(e)}
