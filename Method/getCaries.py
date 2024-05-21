@@ -69,7 +69,7 @@ def formatForRelationToJson(lst):
 
 
 
-data_clean = cleanData(queryData())
+data_clean = cleanData(queryData("caries"))
 countFrequency(data_clean)
 result_node = formatForNodeToJson()
 result_edge = formatForRelationToJson(data_clean)
