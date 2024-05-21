@@ -20,6 +20,7 @@ def cleanData(lst):
     for dict in lst:
         tmp_lst = list(dict)
         head = tmp_lst[1]
+        print(head)
         if tmp_lst[2][0] == " ":
             edge = tmp_lst[2][1:]
         else:
@@ -69,7 +70,7 @@ def formatForRelationToJson(lst):
 
 
 
-data_clean = cleanData(queryData("caries"))
+data_clean = cleanData(queryData())
 countFrequency(data_clean)
 result_node = formatForNodeToJson()
 result_edge = formatForRelationToJson(data_clean)
